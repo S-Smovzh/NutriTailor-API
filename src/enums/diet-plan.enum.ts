@@ -1,0 +1,7 @@
+enum DietPlan {
+  HEALTH_MAINTENANCE = 'HEALTH_MAINTENANCE',
+  CUTTING = 'CUTTING',
+  BULKING = 'BULKING',
+}
+
+export { DietPlan };

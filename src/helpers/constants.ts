@@ -1,0 +1,4 @@
+const DEFAULT_LIMIT = 20;
+const DEFAULT_SKIP = 0;
+
+export { DEFAULT_LIMIT, DEFAULT_SKIP };
