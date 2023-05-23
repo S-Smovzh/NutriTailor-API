@@ -1,13 +1,13 @@
 import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from '@nestjs/common';
+import { ApiParam, ApiQuery } from '@nestjs/swagger';
 import { MealEndpoints } from './endpoints.enum';
-import { Controllers, MealCategory } from '../../enums';
+import { MealCrudService } from '../../cruds';
 import { Meal } from '../../schemas';
 import { CreateMealDto, MealDto, UpdateMealDto } from '../../dtos';
-import { Sort } from '../../types';
+import { Controllers } from '../../enums';
 import { parseMongoAggregationFilter } from '../../helpers';
-import { MealCrudService } from '../../cruds';
 import { User } from '../../decorators';
-import { ApiParam, ApiQuery } from '@nestjs/swagger';
+import { Sort } from '../../types';
 
 @Controller(Controllers.MEAL)
 export class MealController {

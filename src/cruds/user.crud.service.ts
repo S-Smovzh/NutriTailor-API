@@ -27,11 +27,6 @@ export class UserCrudService {
       throw new ConflictException('This email is already in use! Please, log in to your account or use a different email.');
     }
 
-    const existingAnonymousUser = await this.userRepository.findOne({
-      email: createUser.email,
-      anonymous: true,
-    });
-
     createUser.salt = v4();
     createUser.password = await argon2.hash(combinePasswordAndSalt(createUser.password, createUser.salt));
 

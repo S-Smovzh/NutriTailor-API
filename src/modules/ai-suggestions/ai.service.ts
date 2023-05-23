@@ -39,7 +39,7 @@ export class AIService {
   private readonly openAiApiKey = this.configService.get('openAIKey');
 
   public async getRecipeFromAI(category: MealCategory, dietPlan: DietPlan, products: Product[] = []): Promise<AxiosResponse> {
-    let PROMPT = '';
+    let PROMPT: string;
 
     if (products.length) {
       PROMPT = `${PROMPT_WITH_INGREDIENTS(

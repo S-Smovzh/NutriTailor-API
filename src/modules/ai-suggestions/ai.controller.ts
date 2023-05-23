@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Inject, Logger, Param } from '@nestjs/common';
+import { ApiParam } from '@nestjs/swagger';
 import { AIService } from './ai.service';
 import { AIEndpoints } from './endpoints.enum';
+import { Product } from '../../schemas';
 import { Controllers, MealCategory } from '../../enums';
 import { User } from '../../decorators';
-import { Product } from '../../schemas';
-import { ApiParam, ApiQuery } from '@nestjs/swagger';
 
 @Controller(Controllers.AI_SUGGESTIONS)
 export class AIController {

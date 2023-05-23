@@ -1,8 +1,8 @@
 import { Logger, Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { MailerModule } from '../mailer/mailer.module';
-import { AuthModule } from '../../auth/auth.module';
+import { MailerModule } from '../mailer';
+import { AuthModule } from '../../auth';
 
 @Module({
   providers: [Logger, UserService],
