@@ -175,7 +175,7 @@ export class ScriptService {
       if (page) await page.close();
       if (browser) await browser.close();
 
-      const meal = await this.mealRepository.create({
+      await this.mealRepository.create({
         name,
         category,
         estimatedCookingTimeMinutes: data.estimatedCookingTimeMinutes,
