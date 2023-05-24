@@ -11,7 +11,7 @@ interface Meal extends Document {
   videos?: string[];
   stepByStepGuide: string;
   ingredients: Product['_id'][];
-  nutritionScore: number;
+  nutritionScore: string;
   linkToOriginal: string;
   tags?: string[];
 }
@@ -53,7 +53,7 @@ const MealSchema = new Schema(
       required: true,
     },
     nutritionScore: {
-      type: Number,
+      type: String,
       required: true,
     },
     linkToOriginal: {

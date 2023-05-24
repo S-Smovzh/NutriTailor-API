@@ -11,15 +11,32 @@ class MealRepository {
   constructor(@InjectModel(Schemas.MEAL) private readonly mealModel: Model<Meal>) {}
 
   public async find(filter: FilterQuery<Meal> = {}, projection: ProjectionType<Meal> = {}, population: PopulateOptions[] = []) {
-    return this.mealModel.find(filter, projection).populate(population).lean();
+    return this.mealModel
+      .find(filter, projection)
+      .populate({
+        path: 'ingredients',
+        ...population,
+      })
+      .lean();
   }
 
   public async findOne(filter: FilterQuery<Meal> = {}, projection: ProjectionType<Meal> = {}, population: PopulateOptions[] = []) {
-    return this.mealModel.findOne(filter, projection).populate(population).lean();
+    return this.mealModel
+      .findOne(filter, projection)
+      .populate({
+        path: 'ingredients',
+        ...population,
+      })
+      .lean();
   }
 
   public async findById(id: Meal['_id']) {
-    return this.mealModel.findById(id).lean();
+    return this.mealModel
+      .findById(id)
+      .populate({
+        path: 'ingredients',
+      })
+      .lean();
   }
 
   public async countDocuments(filter: FilterQuery<Meal> = {}): Promise<number> {

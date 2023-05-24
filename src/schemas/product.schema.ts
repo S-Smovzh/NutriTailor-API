@@ -6,7 +6,7 @@ interface Product extends Document {
   name: string;
   measurement: Measurement;
   amount: number;
-  user: User['_id'];
+  user?: User['_id'];
 }
 
 const ProductSchema = new Schema(
@@ -27,7 +27,7 @@ const ProductSchema = new Schema(
     user: {
       type: Types.ObjectId,
       ref: Schemas.USER,
-      required: true,
+      required: false,
     },
   },
   { versionKey: false },

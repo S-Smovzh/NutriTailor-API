@@ -1,21 +1,8 @@
-import { Inject, Logger, Module } from '@nestjs/common';
-import { ScriptService } from './script.service';
-import { ScriptController } from './script.controller';
+import { Logger, Module } from '@nestjs/common';
+import { MealController } from './meal.controller';
 
 @Module({
-  providers: [Logger, ScriptService],
-  controllers: [ScriptController],
+  providers: [Logger],
+  controllers: [MealController],
 })
-export class MealModule {
-  constructor(
-    @Inject(Logger)
-    private readonly logger: Logger,
-    @Inject(ScriptService)
-    private readonly scriptService: ScriptService,
-  ) {
-    this.scriptService
-      .startSeed()
-      .then(() => this.logger.log('ScriptModule', 'Seed process was successfully'))
-      .catch((e) => this.logger.error(`Failed to seed the database: ${e.message}`));
-  }
-}
+export class MealModule {}

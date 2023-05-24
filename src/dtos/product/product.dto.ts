@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { Measurement } from '../../enums';
 
@@ -16,8 +16,9 @@ class ProductDto {
   @IsNumber()
   amount: number;
 
-  @Transform((params) => params.obj.user)
-  user: Schema.Types.ObjectId;
+  @IsOptional()
+  @Transform((params) => params.obj?.user)
+  user?: Schema.Types.ObjectId;
 }
 
 export { ProductDto };

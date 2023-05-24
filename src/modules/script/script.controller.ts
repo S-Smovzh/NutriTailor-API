@@ -16,6 +16,6 @@ export class ScriptController {
 
   @Get(ScriptEndpoints.GET_RUN_SEED)
   public async seed(): Promise<void> {
-    await this.scriptService.startSeed();
+    return await this.scriptService.startSeed();
   }
 }

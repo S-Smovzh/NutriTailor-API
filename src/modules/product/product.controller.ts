@@ -61,12 +61,12 @@ export class ProductController {
   })
   @Get(ProductEndpoints.GET_PRODUCT_BY_ID)
   public async getProductById(@Param('productId') productId: Product['_id']) {
-    await this.productCrudService.findById(productId);
+    return await this.productCrudService.findById(productId);
   }
 
   @Post(ProductEndpoints.POST_CREATE_PRODUCT)
   public async createProduct(@User() user, @Body() body: CreateProductDto) {
-    await this.productCrudService.create(body, user._id);
+    return await this.productCrudService.create(body, user._id);
   }
 
   @ApiParam({
@@ -76,7 +76,7 @@ export class ProductController {
   })
   @Patch(ProductEndpoints.PATCH_UPDATE_PRODUCT)
   public async updateProductById(@User() user, @Param('productId') productId: Product['_id'], @Body() body: UpdateProductDto) {
-    await this.productCrudService.update(productId, body, user._id);
+    return await this.productCrudService.update(productId, body, user._id);
   }
 
   @ApiParam({

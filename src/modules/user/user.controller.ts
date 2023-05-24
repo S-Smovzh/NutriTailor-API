@@ -36,8 +36,8 @@ export class UserController {
   }
 
   @Patch(UserEndpoints.PATCH_UPDATE)
-  public async update(@User() { _id }: UserSchema, @Body() body: UpdateProfileDataDto): Promise<void> {
-    await this.userCrudService.update(_id, body);
+  public async update(@User() { _id }: UserSchema, @Body() body: UpdateProfileDataDto): Promise<UserDto> {
+    return await this.userCrudService.update(_id, body);
   }
 
   @Patch(UserEndpoints.PATCH_RESET_PASSWORD)

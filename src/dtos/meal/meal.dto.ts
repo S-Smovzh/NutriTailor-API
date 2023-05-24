@@ -1,7 +1,8 @@
 import { Schema } from 'mongoose';
-import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { Product } from '../../schemas';
+import { MealCategory } from '../../enums';
 
 class MealDto {
   @Transform((params) => params.obj._id)
@@ -10,8 +11,8 @@ class MealDto {
   @IsString()
   name: string;
 
-  @IsString()
-  category: string;
+  @IsEnum(MealCategory)
+  category: MealCategory;
 
   @IsNumber()
   @IsOptional()
@@ -32,12 +33,12 @@ class MealDto {
   @IsString()
   stepByStepGuide: string;
 
-  @Transform((params) => params.obj.ingredients)
   @IsArray()
+  @Transform((params) => params.obj.ingredients)
   ingredients: Product['_id'][];
 
-  @IsNumber()
-  nutritionScore: number;
+  @IsString()
+  nutritionScore: string;
 
   @IsString()
   linkToOriginal: string;

@@ -5,7 +5,7 @@ import { MealCrudService } from '../../cruds';
 import { Meal } from '../../schemas';
 import { CreateMealDto, MealDto, UpdateMealDto } from '../../dtos';
 import { Controllers } from '../../enums';
-import { parseMongoAggregationFilter } from '../../helpers';
+import { DEFAULT_LIMIT, DEFAULT_SKIP, parseMongoAggregationFilter } from '../../helpers';
 import { User } from '../../decorators';
 import { Sort } from '../../types';
 
@@ -40,8 +40,8 @@ export class MealController {
   public async getPaginated(
     @Query('filter') filter?: string,
     @Query('sort') sort?: string,
-    @Query('skip') skip?: number,
-    @Query('limit') limit?: number,
+    @Query('skip') skip = DEFAULT_SKIP,
+    @Query('limit') limit = DEFAULT_LIMIT,
   ): Promise<{ items: MealDto[]; itemsCount: number; itemsCountTotal: number }> {
     let filterParsed: any = {};
     let sortParsed: Sort | null = null;
@@ -61,12 +61,12 @@ export class MealController {
   })
   @Get(MealEndpoints.GET_MEAL_BY_ID)
   public async getMealById(@Param('mealId') mealId: Meal['_id']) {
-    await this.mealCrudService.findById(mealId);
+    return await this.mealCrudService.findById(mealId);
   }
 
   @Post(MealEndpoints.POST_CREATE_MEAL)
   public async createMeal(@User() user, @Body() body: CreateMealDto) {
-    await this.mealCrudService.create(body, user._id);
+    return await this.mealCrudService.create(body, user._id);
   }
 
   @ApiParam({
@@ -76,7 +76,7 @@ export class MealController {
   })
   @Patch(MealEndpoints.PATCH_UPDATE_MEAL)
   public async updateMealById(@User() user, @Param('mealId') mealId: Meal['_id'], @Body() body: UpdateMealDto) {
-    await this.mealCrudService.update(mealId, body, user._id);
+    return await this.mealCrudService.update(mealId, body, user._id);
   }
 
   @ApiParam({

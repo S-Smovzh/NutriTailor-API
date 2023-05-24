@@ -70,7 +70,11 @@ export class MealCrudService {
     return meals.map((meal) => plainToInstance(MealDto, meal));
   }
 
-  public async getPaginated(filter: any, sort: Sort, skip = DEFAULT_SKIP, limit = DEFAULT_LIMIT,
+  public async getPaginated(
+    filter: any,
+    sort: Sort,
+    skip = DEFAULT_SKIP,
+    limit = DEFAULT_LIMIT,
   ): Promise<{
     items: MealDto[];
     itemsCount: number;
