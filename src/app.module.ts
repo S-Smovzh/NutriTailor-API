@@ -1,4 +1,4 @@
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { Logger, MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
@@ -16,7 +16,6 @@ import {
   UserModule,
 } from './modules';
 import { AuthModule, AuthenticationMiddleware, TokenService } from './auth';
-import { ResponseTypeInterceptor } from './interceptors';
 import { Controllers } from './enums';
 import { CrudModule } from './cruds';
 import { RepositoryModule } from './repositories/@repository.module';

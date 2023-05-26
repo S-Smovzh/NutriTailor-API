@@ -2,10 +2,10 @@ import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
 import { MealEndpoints } from './endpoints.enum';
 import { MealCrudService } from '../../cruds';
-import { Meal, Product } from '../../schemas';
+import { Meal } from '../../schemas';
 import { CreateMealDto, MealDto, UpdateMealDto } from '../../dtos';
-import { Controllers, MealCategory } from '../../enums';
-import { DEFAULT_LIMIT, DEFAULT_SKIP, parseMongoAggregationFilter } from '../../helpers';
+import { Controllers } from '../../enums';
+import { DEFAULT_LIMIT, DEFAULT_SKIP } from '../../helpers';
 import { User } from '../../decorators';
 import { Sort } from '../../types';
 

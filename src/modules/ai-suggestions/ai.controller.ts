@@ -5,7 +5,6 @@ import { AIEndpoints } from './endpoints.enum';
 import { Product } from '../../schemas';
 import { Controllers, MealCategory } from '../../enums';
 import { User } from '../../decorators';
-import { AxiosResponse } from 'axios';
 
 @Controller(Controllers.AI_SUGGESTIONS)
 export class AIController {

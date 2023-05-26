@@ -1,6 +1,5 @@
 import { ConflictException, Inject, Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
 import { v4 } from 'uuid';
 import * as argon2 from 'argon2';
 import { UserRepository } from '../repositories';

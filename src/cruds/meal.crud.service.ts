@@ -6,7 +6,6 @@ import { Meal, User } from '../schemas';
 import { CreateMealDto, MealDto } from '../dtos';
 import { combinePipeline, DEFAULT_LIMIT, DEFAULT_SKIP } from '../helpers';
 import { Sort } from '../types';
-import { Schemas } from '../enums';
 
 @Injectable()
 export class MealCrudService {
