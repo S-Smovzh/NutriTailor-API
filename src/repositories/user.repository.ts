@@ -29,7 +29,7 @@ class UserRepository {
   }
 
   public async findOneForLogin(email: User['email']) {
-    return this.userModel.findOne({ email });
+    return this.userModel.findOne({ email }).lean();
   }
 
   public async countDocuments(filter: FilterQuery<User> = {}): Promise<number> {

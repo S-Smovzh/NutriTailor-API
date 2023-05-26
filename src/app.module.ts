@@ -50,10 +50,10 @@ import { RepositoryModule } from './repositories/@repository.module';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ResponseTypeInterceptor,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: ResponseTypeInterceptor,
+    // },
   ],
 })
 export class AppModule {

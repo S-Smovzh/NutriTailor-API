@@ -1,5 +1,14 @@
 import { Schema } from 'mongoose';
-import { IsBoolean, IsEmail, IsEnum, IsNumber, IsOptional, IsString, IsStrongPassword, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsStrongPassword,
+  MinLength,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 import { DietPlan, SupportedLanguages } from '../../enums';
 
@@ -11,7 +20,8 @@ class UserDto {
   email: string;
 
   @IsBoolean()
-  emailVerified: boolean;
+  @IsOptional()
+  emailVerified?: boolean;
 
   @IsString()
   firstName: string;
@@ -37,7 +47,7 @@ class UserDto {
 
 class UserFullInfoDto extends UserDto {
   @IsString()
-  @Min(12)
+  @MinLength(12)
   @IsStrongPassword()
   password: string;
 

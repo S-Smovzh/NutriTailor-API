@@ -8,7 +8,7 @@ import { User as UserSchema } from '../../schemas';
 import { Controllers } from '../../enums';
 import { User } from '../../decorators';
 
-@ApiTags(Controllers.USER, 'apiName#ordersAdmin')
+@ApiTags(Controllers.USER, 'apiName#user')
 @Controller(Controllers.USER)
 export class UserController {
   constructor(

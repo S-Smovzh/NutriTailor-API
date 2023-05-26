@@ -1,0 +1,48 @@
+<mjml>
+    <mj-head>
+        <mj-title>Thank you</mj-title>
+        <mj-preview>Thank you from NutriTailor</mj-preview>
+        <mj-attributes>
+            <mj-all font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+        </mj-attributes>
+    </mj-head>
+    <mj-body background-color="#8DC540">
+
+        <mj-hero background-color="#8DC540">
+            <mj-spacer height="15px"/>
+        </mj-hero>
+
+        <mj-hero mode="fluid-height" height="200px" background-height="240px" background-width="900px"
+                 background-url="https://nutritailor-assets.s3.eu-north-1.amazonaws.com/logo-big.svg"
+                 background-color="#8DC540" padding-left="10px">
+        </mj-hero>
+
+        <mj-hero background-color="#8DC540" css-class="divider-bottom">
+            <mj-spacer height="10px"/>
+        </mj-hero>
+
+        <mj-section css-class="divider-bottom">
+            <mj-column>
+
+                <mj-text font-size="14px" font-family="helvetica" line-height="18px">
+
+                    Hi {{firstName}},
+                    <br></br>
+
+                    Activate your account to join the NutriTailor.
+
+                    <br></br>
+                    <a class="text-link" href="{{userAppBaseUrl}}/verify-email?token={{token}}">Activate</a>
+                    <br></br>
+
+                </mj-text>
+                <mj-text font-size="14px" font-family="helvetica" line-height="15px">
+                    High five,
+                    <br></br>
+                    Your NutriTailor-Team
+                </mj-text>
+            </mj-column>
+
+        </mj-section>
+    </mj-body>
+</mjml>

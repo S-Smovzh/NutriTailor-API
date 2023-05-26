@@ -49,6 +49,14 @@ const UserSchema = new Schema(
       enum: DietPlan,
       required: true,
     },
+    password: {
+      type: String,
+      required: true,
+    },
+    salt: {
+      type: String,
+      required: true,
+    },
     preferredLanguage: {
       type: String,
       enum: SupportedLanguages,

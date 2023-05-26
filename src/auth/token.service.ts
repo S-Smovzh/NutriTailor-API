@@ -20,7 +20,7 @@ export class TokenService {
     try {
       const secret = this.getSecret();
       const expiresIn = this.config.get('verificationTokenExpirationTime');
-      const token = jwt.sign(jwtPayload, secret, { expiresIn });
+      const token = jwt.sign({ ...jwtPayload }, secret, { expiresIn });
 
       await this.userTokenCrudService.create({
         user: jwtPayload._id,
@@ -39,19 +39,23 @@ export class TokenService {
     try {
       const secret = this.getSecret();
       const expiresIn = this.config.get('verificationTokenExpirationTime');
-      const token = jwt.sign(jwtPayload, secret, { expiresIn });
+      const token = jwt.sign({ ...jwtPayload }, secret, { expiresIn });
       return { token };
     } catch (err) {
       this.logger.error(`Error generating JWT: ${err}`);
     }
   }
 
-  public generateJwt(jwtPayload: UserDto, refreshJwtPayload: RefreshPayload): { token: string; refreshToken: string } {
+  public async generateJwt(jwtPayload: UserDto, refreshJwtPayload: RefreshPayload): Promise<{ token: string; refreshToken: string }> {
     try {
       const secret = this.getSecret();
       const expiresIn = this.config.get('jwtExpirationTime');
-      const token = jwt.sign(jwtPayload, secret, { expiresIn });
-      const refreshToken = this.generateRefreshJwt(refreshJwtPayload);
+
+      const token = await jwt.sign({ ...jwtPayload }, secret, { expiresIn });
+      console.log(token);
+      const refreshToken = await this.generateRefreshJwt(refreshJwtPayload);
+      console.log(refreshToken);
+
       return { token, refreshToken };
     } catch (err) {
       this.logger.error(`Error generating JWT: ${err}`);
@@ -130,11 +134,11 @@ export class TokenService {
     }
   }
 
-  private generateRefreshJwt(payload: RefreshPayload) {
+  private async generateRefreshJwt(payload: RefreshPayload) {
     try {
       const secret = this.getRefreshSecret();
       const expiresIn = this.config.get('refreshJwtExpirationTime');
-      return jwt.sign(payload, secret, { expiresIn });
+      return jwt.sign({ ...payload }, secret, { expiresIn });
     } catch (err) {
       this.logger.error(`Error generating Refresh JWT: ${err}`);
     }

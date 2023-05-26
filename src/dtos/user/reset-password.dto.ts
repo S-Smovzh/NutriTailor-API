@@ -1,4 +1,4 @@
-import { IsString, IsStrongPassword, Min } from 'class-validator';
+import { IsString, IsStrongPassword, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { Schema } from 'mongoose';
 
@@ -7,12 +7,12 @@ class ResetPasswordDto {
   _id: Schema.Types.ObjectId;
 
   @IsString()
-  @Min(12)
+  @MinLength(12)
   @IsStrongPassword()
   oldPassword: string;
 
   @IsString()
-  @Min(12)
+  @MinLength(12)
   @IsStrongPassword()
   newPassword: string;
 }

@@ -1,11 +1,11 @@
-import { IsEmail, IsString, IsStrongPassword, Min } from 'class-validator';
+import { IsEmail, IsString, IsStrongPassword, MinLength } from 'class-validator';
 
 class SignInDto {
   @IsEmail()
   email: string;
 
   @IsString()
-  @Min(12)
+  @MinLength(12)
   @IsStrongPassword()
   password: string;
 }

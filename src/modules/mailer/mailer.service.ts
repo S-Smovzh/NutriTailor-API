@@ -1,10 +1,10 @@
 import { ConfigService } from '@nestjs/config';
 import { Inject, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { MJMLJsonObject, MJMLParseResults, MJMLParsingOptions } from 'mjml-core';
-import { SES, SharedIniFileCredentials } from 'aws-sdk';
+import { SES } from 'aws-sdk';
 import { compile } from 'handlebars';
-import path from 'path';
-import fs from 'fs';
+import { resolve } from 'path';
+import { readFileSync } from 'fs';
 import { SupportedLanguages } from '../../enums';
 
 export interface MessageContent {
@@ -55,25 +55,18 @@ export class MailService {
     @Inject(ConfigService)
     private readonly config: ConfigService,
   ) {
-    if (this.config.get('awsProfile') !== 'default') {
+    const accessKeyId = this.config.get('accessKeyId');
+    const secretAccessKey = this.config.get('secretAccessKey');
+    const sessionToken = this.config.get('sessionToken') ?? undefined;
+    if (accessKeyId && secretAccessKey) {
       this.ses = new SES({
         region: this.config.get('awsRegion') ?? 'eu-north-1',
-        credentials: new SharedIniFileCredentials({ profile: this.config.get('awsProfile') }),
+        credentials: {
+          accessKeyId,
+          secretAccessKey,
+          sessionToken,
+        },
       });
-    } else {
-      const accessKeyId = this.config.get('accessKeyId');
-      const secretAccessKey = this.config.get('secretAccessKey');
-      const sessionToken = this.config.get('sessionToken') ?? undefined;
-      if (accessKeyId && secretAccessKey) {
-        this.ses = new SES({
-          region: this.config.get('awsRegion') ?? 'eu-north-1',
-          credentials: {
-            accessKeyId,
-            secretAccessKey,
-            sessionToken,
-          },
-        });
-      }
     }
   }
 
@@ -81,7 +74,7 @@ export class MailService {
     try {
       this.logger.log('Loading the template');
 
-      const textSource = await this.loadTemplate(options.language, options.textTemplateName);
+      const textSource = this.loadTemplate(options.textTemplateName);
 
       const textTemplate = compile(textSource);
       const text = textTemplate(options.data);
@@ -89,7 +82,7 @@ export class MailService {
       const message: MessageContent = { text: text };
 
       if (options.htmlTemplateName !== undefined) {
-        const source = await this.loadTemplate(options.language, options.htmlTemplateName);
+        const source = this.loadTemplate(options.htmlTemplateName);
 
         const template = compile(source);
         const mjmlTemplate = template(options.data);
@@ -97,7 +90,7 @@ export class MailService {
         message.html = this.render(mjmlTemplate, options.options);
       }
       if (options.subjectTemplate !== undefined) {
-        const source = await this.loadTemplate(options.language, options.subjectTemplate);
+        const source = this.loadTemplate(options.subjectTemplate);
 
         const subjectTemplate = compile(source);
 
@@ -166,7 +159,7 @@ export class MailService {
     return result.html;
   }
 
-  private loadTemplate(language: SupportedLanguages, templateName: string): string {
-    return fs.readFileSync(path.join(__dirname, 'assets', 'email-templates', language, templateName), 'utf8');
+  private loadTemplate(templateName: string): string {
+    return readFileSync(resolve(process.cwd(), 'src', 'assets', 'email-templates', templateName), 'utf8');
   }
 }

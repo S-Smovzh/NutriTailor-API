@@ -2,9 +2,9 @@ import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
 import { MealEndpoints } from './endpoints.enum';
 import { MealCrudService } from '../../cruds';
-import { Meal } from '../../schemas';
+import { Meal, Product } from '../../schemas';
 import { CreateMealDto, MealDto, UpdateMealDto } from '../../dtos';
-import { Controllers } from '../../enums';
+import { Controllers, MealCategory } from '../../enums';
 import { DEFAULT_LIMIT, DEFAULT_SKIP, parseMongoAggregationFilter } from '../../helpers';
 import { User } from '../../decorators';
 import { Sort } from '../../types';
@@ -45,12 +45,35 @@ export class MealController {
   ): Promise<{ items: MealDto[]; itemsCount: number; itemsCountTotal: number }> {
     let filterParsed: any = {};
     let sortParsed: Sort | null = null;
+    filter = filter.slice(1, filter.length - 1);
+
     if (filter) {
-      filterParsed = parseMongoAggregationFilter(filter);
+      if (Number.isInteger(+filter)) {
+        filterParsed = {
+          estimatedCookingTimeMinutes: +filter,
+        };
+      } else {
+        filterParsed = {
+          $or: [
+            { name: { $regex: filter, $options: 'i' } },
+            { category: { $regex: filter, $options: 'i' } },
+            { complexity: { $regex: filter, $options: 'i' } },
+            { nutritionScore: { $regex: filter, $options: 'i' } },
+          ],
+        };
+      }
     }
+
     if (sort) {
       sortParsed = JSON.parse(sort);
     }
+    if (skip) {
+      skip = +skip;
+    }
+    if (limit) {
+      limit = +limit;
+    }
+
     return await this.mealCrudService.getPaginated(filterParsed, sortParsed, skip, limit);
   }
 

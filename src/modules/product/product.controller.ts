@@ -51,6 +51,12 @@ export class ProductController {
     if (sort) {
       sortParsed = JSON.parse(sort);
     }
+    if (skip) {
+      skip = +skip;
+    }
+    if (limit) {
+      limit = +limit;
+    }
     return await this.productCrudService.getPaginated(filterParsed, sortParsed, skip, limit);
   }
 

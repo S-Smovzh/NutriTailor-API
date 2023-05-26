@@ -6,6 +6,7 @@ import { Meal, User } from '../schemas';
 import { CreateMealDto, MealDto } from '../dtos';
 import { combinePipeline, DEFAULT_LIMIT, DEFAULT_SKIP } from '../helpers';
 import { Sort } from '../types';
+import { Schemas } from '../enums';
 
 @Injectable()
 export class MealCrudService {
@@ -81,7 +82,10 @@ export class MealCrudService {
     itemsCountTotal: number;
   }> {
     const pipeline = combinePipeline(skip, limit, sort, filter);
-    const meals = await this.mealRepository.aggregate(pipeline);
+    const meals = await this.mealRepository.aggregate([
+      { $lookup: { from: 'products', localField: 'ingredients', foreignField: '_id', as: 'ingredients' } },
+      ...pipeline,
+    ]);
     if (!meals) {
       throw new BadRequestException("Meals' read operation failed.");
     }

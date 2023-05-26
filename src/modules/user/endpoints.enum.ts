@@ -1,7 +1,7 @@
 enum UserEndpoints {
   GET_PROFILE_DATA = '/',
-  POST_REGISTER = '/register',
-  POST_LOGIN = '/login',
+  POST_REGISTER = '/sign-up',
+  POST_LOGIN = '/sign-in',
   PATCH_UPDATE = '/',
   PATCH_RESET_PASSWORD = '/reset-password',
   PATCH_ACTIVATE_ACCOUNT = '/activate-account',

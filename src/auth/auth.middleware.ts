@@ -48,7 +48,7 @@ class AuthenticationMiddleware implements NestMiddleware {
         throw new BadRequestException('Incorrect user details!');
       }
 
-      const { token: newAccessToken, refreshToken: newRefreshToken } = this.tokenService.generateJwt(userFromDb, { _id: userFromDb._id });
+      const { token: newAccessToken, refreshToken: newRefreshToken } = await this.tokenService.generateJwt(userFromDb, { _id: userFromDb._id });
 
       res.setHeader('a-access-token', newAccessToken);
       res.setHeader('a-refresh-token', newRefreshToken);

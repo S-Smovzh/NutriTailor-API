@@ -82,14 +82,7 @@ export class UserCrudService {
   }
 
   public async findOne(filter: any): Promise<UserDto> {
-    const user = await this.userRepository.findOne(filter);
-
-    if (!user) {
-      throw new BadRequestException('The user account not found.');
-    }
-
-    await validate(user);
-    return plainToInstance(UserDto, user);
+    return await this.userRepository.findOne(filter);
   }
 
   public async find(filter: any): Promise<User[]> {

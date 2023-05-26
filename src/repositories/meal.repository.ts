@@ -4,19 +4,29 @@ import { FilterQuery, Model, PipelineStage, PopulateOptions, UpdateQuery } from 
 import { Meal } from '../schemas';
 import { Schemas } from '../enums';
 import { CreateMealDto } from '../dtos';
-import { ProjectionType } from '../types';
+import { ProjectionType, Sort } from '../types';
 
 @Injectable()
 class MealRepository {
   constructor(@InjectModel(Schemas.MEAL) private readonly mealModel: Model<Meal>) {}
 
-  public async find(filter: FilterQuery<Meal> = {}, projection: ProjectionType<Meal> = {}, population: PopulateOptions[] = []) {
+  public async find(
+    filter: FilterQuery<Meal> = {},
+    projection: ProjectionType<Meal> = {},
+    population: PopulateOptions[] = [],
+    sort?: Sort,
+    skip?: number,
+    limit?: number,
+  ) {
     return this.mealModel
       .find(filter, projection)
       .populate({
         path: 'ingredients',
         ...population,
       })
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
       .lean();
   }
 

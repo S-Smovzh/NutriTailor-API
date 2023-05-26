@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import axios, { AxiosResponse } from 'axios';
+import { Configuration, OpenAIApi } from 'openai';
 import { DietPlan, MealCategory } from '../../enums';
 import { Product } from '../../schemas';
 
@@ -10,21 +10,22 @@ const PROMPT_ANY = (mealCategory: MealCategory, dietPlan: DietPlan) =>
 const PROMPT_WITH_INGREDIENTS = (mealCategory: MealCategory, dietPlan: DietPlan, productsString: string) =>
   `Give me a receipt of a ${mealCategory} meal that will help while ${dietPlan} with the following ingredients: ${productsString}. If not enough ingredients, give receipts that include provided ingredients.`;
 
+// "stepByStepGuide": string; - write guide as a plain string, if a the next sentence starts a new paragraph add "/p" before it, if starts a new line - add "/n"
 const PROMPT_RESPONSE_DESCRIPTION = `
 
 
 IMPORTANT! Provide the response ONLY as a JSON object with such fields:
-name: string; - meal name
-category: 'breakfast' | 'lunch' | 'dinner'; - meal category
-estimatedCookingTimeMinutes?: number;
-complexity?: string;  
-images?: string[];
-videos?: string[];
-stepByStepGuide: string; - write guide as a plain string, if a the next sentence starts a new paragraph add "/p" before it, if starts a new line - add "/n"
-ingredients: { name: string; measurement: 'grams' | 'milliliters' | 'units' | 'cloves' | 'cups' | 'scoops' | 'tablespoons' | 'teaspoons' ; amount: number }[];
-nutritionScore: string; - include calories, protein, carbs and fats
-linkToOriginal: string;
-tags?: string[]
+"name": string; - meal name
+"category": 'breakfast' | 'lunch' | 'dinner'; - meal category
+"estimatedCookingTimeMinutes"?: number (use only integers);
+"complexity"?: string;  
+"images"?: string[];
+"videos"?: string[];
+"stepByStepGuide": string; - write guide how to cook
+"ingredients": { "name": string; "measurement": 'grams' | 'milliliters' | 'units' | 'cloves' | 'cups' | 'scoops' | 'tablespoons' | 'teaspoons' ; "amount": number (use only integers) }[];
+"nutritionScore": string; - include calories, protein, carbs and fats
+"linkToOriginal": string;
+"tags"?: string[]
 `;
 
 @Injectable()
@@ -35,11 +36,21 @@ export class AIService {
     @Inject(ConfigService)
     private readonly configService: ConfigService,
   ) {}
-  private readonly openAiUrl = this.configService.get('openAIUrl');
-  private readonly openAiApiKey = this.configService.get('openAIKey');
 
-  public async getRecipeFromAI(category: MealCategory, dietPlan: DietPlan, products: Product[] = []): Promise<AxiosResponse> {
+  public async getRecipeFromAI(category: MealCategory, dietPlan: DietPlan, products: Product[] = []): Promise<any> {
+    const configuration = new Configuration({
+      apiKey: this.configService.get('openAiKey'),
+    });
+    const openai = new OpenAIApi(configuration);
     let PROMPT: string;
+
+    if (!configuration.apiKey) {
+      return {
+        error: {
+          message: 'OpenAI API key not configured, please follow instructions in README.md',
+        },
+      };
+    }
 
     if (products.length) {
       PROMPT = `${PROMPT_WITH_INGREDIENTS(
@@ -51,20 +62,32 @@ export class AIService {
       PROMPT = `${PROMPT_ANY(category, dietPlan)}`;
     }
 
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.openAiApiKey}`,
-    };
+    try {
+      const completion = await openai.createCompletion({
+        model: 'text-davinci-002',
+        prompt: `${PROMPT}${PROMPT_RESPONSE_DESCRIPTION}`,
+        temperature: 0.8,
+        max_tokens: 3000,
+      });
 
-    const data = {
-      prompt: `${PROMPT}${PROMPT_RESPONSE_DESCRIPTION}`,
-      max_tokens: 100, // adjust as needed
-    };
+      const objectResponse = completion.data.choices[0].text;
 
-    const response = await axios.post(this.openAiUrl, data, { headers: headers });
+      const arr = objectResponse.split('');
+      const startOfObject = arr.indexOf('{');
+      arr.reverse();
+      const endOfObject = arr.indexOf('}');
 
-    console.log(response);
+      const text = objectResponse.slice(startOfObject, objectResponse.length - endOfObject);
 
-    return response;
+      console.log(text, 'text');
+
+      if (text) {
+        return JSON.parse(text);
+      }
+
+      return null;
+    } catch (e) {
+      console.error(e);
+    }
   }
 }

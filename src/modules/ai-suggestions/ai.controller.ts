@@ -25,7 +25,7 @@ export class AIController {
     enum: MealCategory,
   })
   @Get(AIEndpoints.GET_ANY_BY_MEAL_CATEGORY)
-  public async getAny(@User() user, @Param('mealCategory') mealCategory: MealCategory): Promise<AxiosResponse> {
+  public async getAny(@User() user, @Param('mealCategory') mealCategory: MealCategory): Promise<any> {
     return await this.aiService.getRecipeFromAI(mealCategory, user.dietPlan);
   }
 
@@ -40,7 +40,7 @@ export class AIController {
     @User() user,
     @Param('mealCategory') mealCategory: MealCategory,
     @Body() body: { products: Product[] },
-  ): Promise<AxiosResponse> {
+  ): Promise<any> {
     return await this.aiService.getRecipeFromAI(mealCategory, user.dietPlan, body.products);
   }
 }

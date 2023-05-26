@@ -1,0 +1,49 @@
+{
+  "name": "Chocolate Protein Pancakes",
+  "category": "breakfast",
+  "estimatedCookingTimeMinutes": 10,
+  "complexity": "easy",
+  "images": ["https://images.unsplash.com/photo-1568997816082-e6c3d3f3f9f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+  "videos": [],
+  "stepByStepGuide": "In a bowl, mix together the flour, protein powder, baking powder, and salt. /p In a separate bowl, whisk together the egg, milk, and melted butter. /p Pour the wet ingredients into the dry ingredients and mix until combined. /p Heat a non-stick pan over medium heat. Grease the pan with butter or cooking spray. /p Pour ¼ cup of the batter onto the pan. Cook for 2-3 minutes until the edges start to brown. Flip and cook for another 1-2 minutes. /p Repeat with the remaining batter. /pServe the pancakes with your favorite toppings. Enjoy!",
+  "ingredients": [
+    {
+      "name": "all-purpose flour",
+      "measurement": "cups",
+      "amount": 1
+    },
+    {
+      "name": "protein powder",
+      "measurement": "scoops",
+      "amount": 2
+    },
+    {
+      "name": "baking powder",
+      "measurement": "teaspoons",
+      "amount": 1
+    },
+    {
+      "name": "salt",
+      "measurement": "teaspoons",
+      "amount": 1/2
+    },
+    {
+      "name": "egg",
+      "measurement": "units",
+      "amount": 1
+    },
+    {
+      "name": "milk",
+      "measurement": "cups",
+      "amount": 1
+    },
+    {
+      "name": "melted butter",
+      "measurement": "tablespoons",
+      "amount": 2
+    }
+  ],
+  "nutritionScore": "Calories: 434, Protein: 28.5g, Carbs: 39.1g, Fats: 17.2g",
+  "linkToOriginal": "https://www.eatthis.com/chocolate-protein-pancakes/",
+  "tags": ["pancakes", "protein", "chocolate", "breakfast", "bulking"]
+}

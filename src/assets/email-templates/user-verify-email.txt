@@ -1,0 +1,5 @@
+Activate your account to join the NutriTailor.
+
+Link: {{userAppBaseUrl}}/auth/verify-email?token={{token}}
+
+

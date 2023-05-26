@@ -11,7 +11,7 @@ const combinePipeline = (skip: number, limit: number, sort: Sort | null, filter:
   }
 
   if (!!filter && Object.values(filter).length) {
-    pipeline = [{ $match: { $and: filter } }, ...pipeline];
+    pipeline = [{ $match: filter }, ...pipeline];
   }
 
   return pipeline;

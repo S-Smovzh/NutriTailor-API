@@ -13,7 +13,6 @@ import { combinePasswordAndSalt } from '../../helpers';
 @Injectable()
 export class UserService {
   private readonly FRONTEND_BASE_URL: string;
-  private readonly ADMIN_BASE_URL: string;
 
   constructor(
     @Inject(Logger)
@@ -30,7 +29,6 @@ export class UserService {
     private readonly mailService: MailService,
   ) {
     this.FRONTEND_BASE_URL = this.config.get('frontendBaseUrl');
-    this.ADMIN_BASE_URL = this.config.get('adminAppBaseUrl');
   }
 
   public async register(createUserDto: SignUpDto): Promise<void> {
@@ -40,7 +38,7 @@ export class UserService {
       throw new ConflictException('Account with such email already exists.');
     }
 
-    const newlyCreatedUser = await this.userCrudService.create(createUserDto);
+    const newlyCreatedUser = await this.userCrudService.create({ ...createUserDto});
 
     const textTemplateName = 'user-verify-email.txt';
     const htmlTemplateName = 'user-verify-email.mjml';
@@ -71,13 +69,19 @@ export class UserService {
       throw new BadRequestException('Incorrect login details!');
     }
 
+    if (!user.emailVerified) {
+      throw new BadRequestException('Your account is deactivated. Please, check your email.');
+    }
+
     const passwordVerification = await argon2.verify(user.password, combinePasswordAndSalt(loginDto.password, user.salt));
 
     if (!passwordVerification) {
       throw new BadRequestException('Incorrect login details!');
     }
 
-    const { token, refreshToken } = this.tokenService.generateJwt(user, { _id: user._id });
+    const { token, refreshToken } = await this.tokenService.generateJwt(user, { _id: user._id });
+    delete user.password;
+    delete user.salt;
     return { ...user, token, refreshToken };
   }
 
@@ -137,7 +141,7 @@ export class UserService {
     const password = await argon2.hash(combinePasswordAndSalt(updateUserPasswordDto.newPassword, salt));
     await this.userCrudService.update(user._id, { password, salt });
 
-    const { token, refreshToken } = this.tokenService.generateJwt(user, { _id: user._id });
+    const { token, refreshToken } = await this.tokenService.generateJwt(user, { _id: user._id });
     return { ...user, token, refreshToken };
   }
 
@@ -170,7 +174,7 @@ export class UserService {
 
     await this.userCrudService.update(userByToken._id, { emailVerified: isEmailVerification });
 
-    const { token, refreshToken } = this.tokenService.generateJwt(userByToken, { _id: userByToken._id });
+    const { token, refreshToken } = await this.tokenService.generateJwt(userByToken, { _id: userByToken._id.toString() });
     return { success: true, token, refreshToken };
   }
 }
