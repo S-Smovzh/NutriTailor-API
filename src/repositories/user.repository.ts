@@ -12,20 +12,20 @@ class UserRepository {
 
   public async find(filter: FilterQuery<User> = {}, projection: ProjectionType<User> = {}, population: PopulateOptions[] = []) {
     return this.userModel
-      .find(filter, { ...projection, password: 0 })
+      .find(filter, { ...projection, password: 0, salt: 0 })
       .populate(population)
       .lean();
   }
 
   public async findOne(filter: FilterQuery<User> = {}, projection: ProjectionType<User> = {}, population: PopulateOptions[] = []) {
     return this.userModel
-      .findOne(filter, { ...projection, password: 0 })
+      .findOne(filter, { ...projection, password: 0, salt: 0 })
       .populate(population)
       .lean();
   }
 
   public async findById(id: User['_id']) {
-    return this.userModel.findById(id, { password: 0 }).lean();
+    return this.userModel.findById(id, { password: 0, salt: 0 }).lean();
   }
 
   public async findOneForLogin(email: User['email']) {

@@ -67,8 +67,8 @@ export class AppModule {
         { path: `${Controllers.USER}${UserEndpoints.POST_REGISTER}`, method: RequestMethod.POST },
         { path: `${Controllers.USER}${UserEndpoints.POST_LOGIN}`, method: RequestMethod.POST },
         { path: `${Controllers.USER}${UserEndpoints.PATCH_RESET_PASSWORD}`, method: RequestMethod.PATCH },
+        { path: `${Controllers.USER}${UserEndpoints.PATCH_UPDATE_FORGOTTEN_PASSWORD}`, method: RequestMethod.PATCH },
         { path: `${Controllers.USER}${UserEndpoints.PATCH_ACTIVATE_ACCOUNT}`, method: RequestMethod.PATCH },
-        { path: `${Controllers.USER}${UserEndpoints.PATCH_UPDATE_PASSWORD}`, method: RequestMethod.PATCH },
       )
       .forRoutes(Controllers.AI_SUGGESTIONS, Controllers.MEAL, Controllers.PRODUCT, Controllers.USER);
   }

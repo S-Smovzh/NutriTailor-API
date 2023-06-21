@@ -5,7 +5,7 @@ import { UserDto } from './user.dto';
 class SignUpDto extends OmitType(UserDto, ['_id']) {
   @IsString()
   @MinLength(12)
-  @IsStrongPassword()
+    @IsStrongPassword({}, { message: 'Password must include a number, upper and lowercase letters and symbol.' })
   password: string;
 
   @IsString()

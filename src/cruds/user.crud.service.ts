@@ -3,8 +3,8 @@ import { plainToInstance } from 'class-transformer';
 import { v4 } from 'uuid';
 import * as argon2 from 'argon2';
 import { UserRepository } from '../repositories';
-import { User } from '../schemas';
-import { SignUpDto, UserDto, UpdateProfileDataDto, ResetPasswordDto, UserFullInfoDto } from '../dtos';
+import { FullUser, User } from '../schemas';
+import { SignUpDto, UserDto, ResetPasswordDto, UserFullInfoDto } from '../dtos';
 import { Sort } from '../types';
 import { combinePasswordAndSalt, combinePipeline } from '../helpers';
 
@@ -54,7 +54,7 @@ export class UserCrudService {
     return await this.userRepository.findByIdAndDelete(userId);
   }
 
-  public async update(userId: User['_id'], updateUser: Partial<UpdateProfileDataDto>): Promise<UserDto> {
+  public async update(userId: User['_id'], updateUser: Partial<FullUser>): Promise<UserDto> {
     const user = await this.userRepository.findOneAndUpdate(userId, updateUser);
     if (!user) {
       throw new BadRequestException("Couldn't update the user.");

@@ -6,7 +6,7 @@ class SignInDto {
 
   @IsString()
   @MinLength(12)
-  @IsStrongPassword()
+  @IsStrongPassword({}, { message: 'Password must include a number, upper and lowercase letters and symbol.' })
   password: string;
 }
 

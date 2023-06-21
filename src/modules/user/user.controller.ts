@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Inject, Logger, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Logger, Patch, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserService, UserWithToken } from './user.service';
 import { UserEndpoints } from './endpoints.enum';
 import { UserCrudService } from '../../cruds';
-import { SignUpDto, UserDto, SignInDto, UpdateProfileDataDto, ResetPasswordDto } from '../../dtos';
-import { User as UserSchema } from '../../schemas';
+import { SignUpDto, UserDto, SignInDto, UpdateProfileDataDto, ResetPasswordDto, UpdateForgottenPasswordDto } from '../../dtos';
+import { User as UserSchema, UserToken } from '../../schemas';
 import { Controllers } from '../../enums';
 import { User } from '../../decorators';
 
@@ -45,6 +45,14 @@ export class UserController {
     return this.userService.resetPassword(email);
   }
 
+  @Patch(UserEndpoints.PATCH_UPDATE_FORGOTTEN_PASSWORD)
+  public updateForgottenPassword(
+    @Query('resetToken') resetToken: UserToken['value'],
+    @Body() updateForgottenPasswordDto: UpdateForgottenPasswordDto,
+  ): Promise<void> {
+    return this.userService.updateForgottenPassword(resetToken, updateForgottenPasswordDto);
+  }
+
   @Patch(UserEndpoints.PATCH_ACTIVATE_ACCOUNT)
   public activateAccount(
     @Query('activationToken') activationToken: string,
@@ -55,10 +63,10 @@ export class UserController {
 
   @Patch(UserEndpoints.PATCH_UPDATE_PASSWORD)
   public updateAccountPassword(
-    @Param('userId') userId: UserSchema['_id'],
+    @User() { _id }: UserSchema,
     @Body() updateUserPasswordDto: ResetPasswordDto,
   ): Promise<UserWithToken> {
-    return this.userService.updateAccountPassword(userId, updateUserPasswordDto);
+    return this.userService.updateAccountPassword(_id, updateUserPasswordDto);
   }
 
   @Get(UserEndpoints.GET_PROFILE_DATA)

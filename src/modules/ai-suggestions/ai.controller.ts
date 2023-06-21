@@ -36,10 +36,10 @@ export class AIController {
   })
   @Post(AIEndpoints.POST_BY_MEAL_CATEGORY_AND_GIVEN_PRODUCT)
   public async getByIngredients(
-    @User() user,
+    @User() { dietPlan },
     @Param('mealCategory') mealCategory: MealCategory,
-    @Body() body: { products: Product[] },
+    @Body() { products }: { products: Product[] },
   ): Promise<any> {
-    return await this.aiService.getRecipeFromAI(mealCategory, user.dietPlan, body.products);
+    return await this.aiService.getRecipeFromAI(mealCategory, dietPlan, products);
   }
 }

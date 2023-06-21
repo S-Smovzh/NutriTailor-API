@@ -13,6 +13,11 @@ interface User extends Document {
   preferredLanguage: SupportedLanguages;
 }
 
+interface FullUser extends User {
+  password: string;
+  salt: string;
+}
+
 const UserSchema = new Schema(
   {
     email: {
@@ -67,4 +72,4 @@ const UserSchema = new Schema(
 );
 
 export { UserSchema };
-export type { User };
+export type { User, FullUser };

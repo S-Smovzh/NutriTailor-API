@@ -52,9 +52,7 @@ export class TokenService {
       const expiresIn = this.config.get('jwtExpirationTime');
 
       const token = await jwt.sign({ ...jwtPayload }, secret, { expiresIn });
-      console.log(token);
       const refreshToken = await this.generateRefreshJwt(refreshJwtPayload);
-      console.log(refreshToken);
 
       return { token, refreshToken };
     } catch (err) {

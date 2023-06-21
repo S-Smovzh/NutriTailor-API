@@ -83,6 +83,11 @@ export class MealCrudService {
     const pipeline = combinePipeline(skip, limit, sort, filter);
     const meals = await this.mealRepository.aggregate([
       { $lookup: { from: 'products', localField: 'ingredients', foreignField: '_id', as: 'ingredients' } },
+      {
+        $addFields: {
+          estimatedCookingTimeInt: { $toInt: "$estimatedCookingTimeMinutes" }
+        }
+      },
       ...pipeline,
     ]);
     if (!meals) {

@@ -5,9 +5,9 @@ import * as argon2 from 'argon2';
 import { v4 } from 'uuid';
 import { TokenService } from '../../auth';
 import { MailService } from '../mailer';
-import { User } from '../../schemas';
+import { User, UserToken } from '../../schemas';
 import { UserCrudService, UserTokenCrudService } from '../../cruds';
-import { SignUpDto, SignInDto, UserDto, ResetPasswordDto } from '../../dtos';
+import { SignUpDto, SignInDto, UserDto, ResetPasswordDto, UpdateForgottenPasswordDto } from '../../dtos';
 import { combinePasswordAndSalt } from '../../helpers';
 
 @Injectable()
@@ -38,7 +38,7 @@ export class UserService {
       throw new ConflictException('Account with such email already exists.');
     }
 
-    const newlyCreatedUser = await this.userCrudService.create({ ...createUserDto});
+    const newlyCreatedUser = await this.userCrudService.create({ ...createUserDto });
 
     const textTemplateName = 'user-verify-email.txt';
     const htmlTemplateName = 'user-verify-email.mjml';
@@ -100,9 +100,9 @@ export class UserService {
 
   public async resetPassword(email: User['email']): Promise<void> {
     const user = await this.userCrudService.findOneForLogin(email);
-    const { _id, salt, password } = user;
+    const { _id, salt, password, emailVerified } = user;
 
-    if (password && salt) {
+    if (!emailVerified) {
       throw new UnauthorizedException(
         'Your account has been blocked. Check your email for verification message or contact our support team.',
       );
@@ -134,8 +134,35 @@ export class UserService {
     });
   }
 
+  public async updateForgottenPassword(
+    resetToken: UserToken['value'],
+    updateForgottenPasswordDto: UpdateForgottenPasswordDto,
+  ): Promise<void> {
+    const { user: userId } = await this.userTokenCrudService.findByValue(resetToken);
+
+    if (!userId) {
+      throw new BadRequestException('Invalid reset token.');
+    }
+
+    const user = await this.userCrudService.findById(userId);
+
+    const salt = v4();
+    const password = await argon2.hash(combinePasswordAndSalt(updateForgottenPasswordDto.password, salt));
+    await this.userCrudService.update(user._id, { password, salt });
+  }
+
   public async updateAccountPassword(userId: User['_id'], updateUserPasswordDto: ResetPasswordDto): Promise<UserWithToken> {
     const user = await this.userCrudService.findById(userId);
+    const userFull = await this.userCrudService.findOneForLogin(user.email);
+
+    const oldPasswordVerified = await argon2.verify(
+      userFull.password,
+      combinePasswordAndSalt(updateUserPasswordDto.oldPassword, userFull.salt),
+    );
+
+    if (!oldPasswordVerified) {
+      throw new BadRequestException('Old password does not match!');
+    }
 
     const salt = v4();
     const password = await argon2.hash(combinePasswordAndSalt(updateUserPasswordDto.newPassword, salt));

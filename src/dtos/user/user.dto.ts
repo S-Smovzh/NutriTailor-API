@@ -1,14 +1,5 @@
 import { Schema } from 'mongoose';
-import {
-  IsBoolean,
-  IsEmail,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsStrongPassword,
-  MinLength,
-} from 'class-validator';
+import { IsBoolean, IsEmail, IsEnum, IsNumber, IsOptional, IsString, IsStrongPassword, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { DietPlan, SupportedLanguages } from '../../enums';
 
@@ -48,7 +39,7 @@ class UserDto {
 class UserFullInfoDto extends UserDto {
   @IsString()
   @MinLength(12)
-  @IsStrongPassword()
+  @IsStrongPassword({}, { message: 'Password must include a number, upper and lowercase letters and symbol.' })
   password: string;
 
   @IsString()

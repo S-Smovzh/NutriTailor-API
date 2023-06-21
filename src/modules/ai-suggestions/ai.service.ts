@@ -8,7 +8,7 @@ const PROMPT_ANY = (mealCategory: MealCategory, dietPlan: DietPlan) =>
   `Give me a receipt of a ${mealCategory} that will help while ${dietPlan} with any ingredients.`;
 
 const PROMPT_WITH_INGREDIENTS = (mealCategory: MealCategory, dietPlan: DietPlan, productsString: string) =>
-  `Give me a receipt of a ${mealCategory} meal that will help while ${dietPlan} with the following ingredients: ${productsString}. If not enough ingredients, give receipts that include provided ingredients.`;
+  `Give me a receipt of a ${mealCategory} meal that will help while ${dietPlan} with any ingredients. But always include the following ingredients: ${productsString}.`;
 
 // "stepByStepGuide": string; - write guide as a plain string, if a the next sentence starts a new paragraph add "/p" before it, if starts a new line - add "/n"
 const PROMPT_RESPONSE_DESCRIPTION = `
@@ -79,6 +79,7 @@ export class AIService {
 
       const text = objectResponse.slice(startOfObject, objectResponse.length - endOfObject);
 
+      console.log(PROMPT, 'PROMPT');
       console.log(text, 'text');
 
       if (text) {

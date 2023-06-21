@@ -50,7 +50,7 @@ export class MealController {
     if (filter) {
       if (Number.isInteger(+filter)) {
         filterParsed = {
-          estimatedCookingTimeMinutes: +filter,
+          estimatedCookingTimeInt: +filter,
         };
       } else {
         filterParsed = {

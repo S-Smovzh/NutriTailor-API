@@ -8,13 +8,25 @@ class ResetPasswordDto {
 
   @IsString()
   @MinLength(12)
-  @IsStrongPassword()
+    @IsStrongPassword({}, { message: 'Password must include a number, upper and lowercase letters and symbol.' })
   oldPassword: string;
 
   @IsString()
   @MinLength(12)
-  @IsStrongPassword()
+    @IsStrongPassword({}, { message: 'Password must include a number, upper and lowercase letters and symbol.' })
   newPassword: string;
 }
 
-export { ResetPasswordDto };
+class UpdateForgottenPasswordDto {
+  @IsString()
+  @MinLength(12)
+  @IsStrongPassword({}, { message: 'Password must include a number, upper and lowercase letters and symbol.' })
+  password: string;
+
+  @IsString()
+  @MinLength(12)
+  @IsStrongPassword({}, { message: 'Password must include a number, upper and lowercase letters and symbol.' })
+  passwordRepeat: string;
+}
+
+export { ResetPasswordDto, UpdateForgottenPasswordDto };
